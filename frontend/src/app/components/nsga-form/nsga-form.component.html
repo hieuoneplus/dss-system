@@ -1,0 +1,98 @@
+<!--<form [formGroup]="form" (ngSubmit)="submit()" class="form-grid">-->
+<!--  <h3>NSGA-II Parameters</h3>-->
+<!--  <label>Radius (m)</label><input type="number" formControlName="radiusMeters" min="100" step="50"/>-->
+<!--  <label>Radius comp(m)</label><input type="number" formControlName="radiusComp" min="100" step="50"/>-->
+<!--  <label>Population</label><input type="number" formControlName="populationSize" min="20"/>-->
+<!--  <label>Generations</label><input type="number" formControlName="generations" min="10"/>-->
+<!--  <label>Pc</label><input type="number" formControlName="crossoverProb" min="0" max="1" step="0.05"/>-->
+<!--  <label>Pm</label><input type="number" formControlName="mutationProb" min="0" max="1" step="0.05"/>-->
+<!--  <label>Tournament K</label><input type="number" formControlName="tournamentK" min="2" max="4"/>-->
+<!--  <label>Candidate Limit</label><input type="number" formControlName="candidateLimit" min="10"/>-->
+
+<!--  <h4>Constraints & Preferences</h4>-->
+<!--  <label>Max Rent</label><input type="number" formControlName="maxRent" min="0"/>-->
+<!--  <label>Available From</label><input type="date" formControlName="availableFromIso"/>-->
+<!--  <label>Top-K Suggestions</label><input type="number" formControlName="pickTopK" min="1"/>-->
+
+<!--  <div class="actions"><button type="submit">Run NSGA-II</button></div>-->
+<!--</form>-->
+
+
+<fieldset>
+  <legend>Thiết lập phương án</legend>
+
+  <label>K (số lô/1 phương án)</label>
+  <input type="number" [(ngModel)]="model.kLots" min="1" required>
+
+  <label>Top-N phương án</label>
+  <input type="number" [(ngModel)]="model.pickTopSets" min="1">
+
+  <label>Giá thuê tối đa (VND/tháng)</label>
+  <input type="number" [(ngModel)]="model.maxRent" placeholder="vd 150000000">
+
+  <label>Sẵn có từ ngày</label>
+  <input type="date" [(ngModel)]="model.availableFromIso">
+
+  <div class="row">
+    <div>
+      <label>Bán kính dân số (m)</label>
+      <input type="number" [(ngModel)]="model.populationRadius" min="100" step="50">
+    </div>
+    <div>
+      <label>Bán kính cạnh tranh (m)</label>
+      <input type="number" [(ngModel)]="model.competitionRadius" min="100" step="50">
+    </div>
+  </div>
+
+  <details>
+    <summary>Tuỳ chọn: Tránh lô quá gần nhau</summary>
+    <label>Khoảng cách tối thiểu (m)</label>
+    <input type="number" [(ngModel)]="model.minDistanceMeters" min="0" step="10">
+    <label>Mức phạt (0–1)</label>
+    <input type="number" [(ngModel)]="model.distancePenalty" min="0" max="1" step="0.01">
+  </details>
+</fieldset>
+
+<details>
+  <summary>Nâng cao (không bắt buộc)</summary>
+  <label>Chế độ</label>
+  <select [(ngModel)]="model.preset">
+    <option value="fast">Nhanh</option>
+    <option value="balanced">Cân bằng</option>
+    <option value="quality">Chất lượng cao</option>
+  </select>
+
+  <div class="grid-3">
+    <div>
+      <label>Population (override)</label>
+      <input type="number" [(ngModel)]="model.populationSize" min="40" max="600">
+    </div>
+    <div>
+      <label>Generations (override)</label>
+      <input type="number" [(ngModel)]="model.generations" min="30" max="300">
+    </div>
+    <div>
+      <label>Tournament K (override)</label>
+      <input type="number" [(ngModel)]="model.tournamentK" min="2" max="5">
+    </div>
+  </div>
+
+  <div class="grid-3">
+    <div>
+      <label>Pc (override)</label>
+      <input type="number" [(ngModel)]="model.crossoverProb" min="0" max="1" step="0.01">
+    </div>
+    <div>
+      <label>Pm (override)</label>
+      <input type="number" [(ngModel)]="model.mutationProb" min="0" max="1" step="0.01">
+    </div>
+    <div>
+      <label>Candidate limit</label>
+      <input type="number" [(ngModel)]="model.candidateLimit" min="1">
+    </div>
+  </div>
+</details>
+
+<button [disabled]="loading" (click)="run()">
+  {{ loading ? 'Đang chạy...' : 'Chạy tối ưu' }}
+</button>

@@ -1,0 +1,7 @@
+.explain { padding: 8px 10px; background: #f1f5f9; border-radius: 8px; border: 1px solid #e2e8f0; }
+.tbl { width: 100%; border-collapse: collapse; margin-top: 8px; }
+.tbl th, .tbl td { border: 1px solid #e5e7eb; padding: 6px 8px; font-size: 14px; }
+.tbl tbody tr { cursor: pointer; }
+.tbl tbody tr.selected { background: #e0f2fe; }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip { background: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 999px; padding: 2px 8px; font-size: 12px; }

@@ -1,0 +1,37 @@
+<div *ngIf="result">
+  <p class="explain" *ngIf="result.paramsEcho?.explain">
+    {{ result.paramsEcho.explain }}
+  </p>
+
+  <h3>Kết quả đề xuất (Top {{ result.paramsEcho.pickTopSets }})</h3>
+  <table class="tbl" *ngIf="result.recommendations?.length">
+    <thead>
+    <tr>
+      <th>#</th>
+      <th>Tổng chi phí</th>
+      <th>Dân số (ước tính)</th>
+      <th>Cạnh tranh</th>
+      <th>Rank</th>
+      <th>Lô</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let s of result.recommendations; let i = index; trackBy: trackByIdx"
+        [class.selected]="i === selectedIndex"
+        (click)="choose(i)">
+      <td>{{ i+1 }}</td>
+      <td>{{ s.objRent | number }}</td>
+      <td>{{ toPos(s.objNegPop) | number }}</td>
+      <td>{{ s.objComp | number:'1.0-0' }}</td>
+      <td>{{ s.rank }}</td>
+      <td>
+        <div class="chips">
+          <span class="chip" *ngFor="let id of s.candidateIds">{{ id }}</span>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="!result.recommendations?.length">Chưa có phương án phù hợp.</p>
+</div>

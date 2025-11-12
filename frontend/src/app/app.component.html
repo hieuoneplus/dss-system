@@ -1,0 +1,20 @@
+<header>
+    <h1>{{ title }}</h1>
+</header>
+
+<main class="grid">
+    <section>
+        <app-nsga-form [loading]="loading" (submitReq)="onSubmit($event)"></app-nsga-form>
+
+        <app-recommendations-table
+                *ngIf="result"
+                [result]="result"
+                [selectedIndex]="selectedIdx"
+                (pick)="onPick($event)">
+        </app-recommendations-table>
+    </section>
+
+    <aside>
+        <app-pareto-map [solution]="selectedSolution"></app-pareto-map>
+    </aside>
+</main>
