@@ -20,7 +20,40 @@
 
 <fieldset>
   <legend>Thiết lập phương án</legend>
+  <label>Thành phố (multi-select, có tìm kiếm)</label>
+  <ng-select
+          [items]="cities"
+          bindLabel="name"
+          bindValue="id"
+          [multiple]="true"
+          [closeOnSelect]="false"
+          [searchable]="true"
+          [virtualScroll]="true"
+          placeholder="Chọn thành phố..."
+          [(ngModel)]="selectedCityIds">
 
+    <!-- Header với nút thao tác nhanh -->
+    <ng-template ng-header-tmp>
+      <div style="display:flex; gap:8px; padding:6px 8px;">
+        <button type="button" (click)="selectAllCities()">Chọn tất cả</button>
+        <button type="button" (click)="clearAllCities()">Bỏ chọn tất cả</button>
+      </div>
+    </ng-template>
+
+    <!-- Tùy biến mỗi dòng item -->
+    <ng-template ng-option-tmp let-item="item" let-index="index">
+      {{ item.name }}
+      <small style="opacity:.7;">— {{ item.radiusM | number }} m</small>
+    </ng-template>
+
+    <!-- Hiển thị chip đã chọn (có nút x mặc định) -->
+    <ng-template ng-multi-label-tmp let-items="items">
+      <div class="ng-value" *ngFor="let it of items">
+        <span class="ng-value-label">{{ it.name }}</span>
+        <span class="ng-value-icon left" (click)="removeItem(it.id)">×</span>
+      </div>
+    </ng-template>
+  </ng-select>
   <label>K (số lô/1 phương án)</label>
   <input type="number" [(ngModel)]="model.kLots" min="1" required>
 

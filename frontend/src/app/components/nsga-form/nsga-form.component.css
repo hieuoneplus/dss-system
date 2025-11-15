@@ -6,3 +6,17 @@ input, select { width: 100%; padding: 6px 8px; border: 1px solid #ccc; border-ra
 button { margin-top: 12px; padding: 8px 12px; border: 0; border-radius: 8px; background: #0ea5e9; color: white; cursor: pointer; }
 button:disabled { opacity: 0.6; cursor: not-allowed; }
 details { margin-top: 8px; }
+ng-select .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+    line-height: 1.2rem;
+}
+ng-select .ng-dropdown-panel .ng-dropdown-header button {
+    padding: 4px 8px;
+    border: 0;
+    border-radius: 6px;
+    background: #0ea5e9;
+    color: #fff;
+    cursor: pointer;
+}
+ng-select .ng-dropdown-panel .ng-dropdown-header button + button {
+    background: #6b7280;
+}

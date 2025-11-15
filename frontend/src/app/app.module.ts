@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import {NsgaFormComponent} from "./components/nsga-form/nsga-form.component";
 import {RecommendationsTableComponent} from "./components/recommendations-table/recommendations-table.component";
 import {ParetoMapComponent} from "./components/pareto-map/pareto-map.component";
+import {NgSelectModule} from "@ng-select/ng-select";
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import {ParetoMapComponent} from "./components/pareto-map/pareto-map.component";
     imports: [
         BrowserModule,
         FormsModule,
-        HttpClientModule
+        HttpClientModule,
+        NgSelectModule
     ],
     bootstrap: [AppComponent]
 })

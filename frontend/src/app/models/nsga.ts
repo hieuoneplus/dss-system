@@ -1,4 +1,5 @@
 export interface Nsga2Request {
+  cityIds?: number[];
   kLots?: number;                // K
   pickTopSets?: number;          // Top-N
 
