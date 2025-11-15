@@ -35,7 +35,7 @@ public class Nsga2Service {
                 ? LocalDate.parse(req.availableFromIso) : null;
 
         // --- Load data ---
-        var feats = repo.fetchFeatures(LIMIT, rPop, rComp, req.maxRent, cutoff, req.whitelistCandidateIds);
+        var feats = repo.fetchFeatures(LIMIT, rPop, rComp, req.maxRent, cutoff, req.whitelistCandidateIds, req.cityIds);
         if (feats.size() < K) throw new IllegalStateException("Không đủ lô hợp lệ để chọn K = " + K);
 
         // Index nhanh

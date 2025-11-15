@@ -3,6 +3,7 @@ package com.example.nsga;
 import java.util.List;
 
 public class Nsga2Request {
+    public java.util.List<Integer> cityIds;
     public Integer kLots;                 // Số lô cần chọn trong 1 phương án (K)
     public Integer pickTopSets;           // Số phương án muốn đề xuất (Top-N)
 

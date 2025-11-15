@@ -24,7 +24,7 @@ public class ParcelRepository {
         public int compCnt;
     }
 
-    public List<ParcelFeature> fetchFeatures(int limit, Double radiusMeters, Double Rcomp, Double maxRent, LocalDate availableCutoff, List<Integer> whitelist) {
+    public List<ParcelFeature> fetchFeatures(int limit, Double radiusMeters, Double Rcomp, Double maxRent, LocalDate availableCutoff, List<Integer> whitelist, List<Integer> cityIds) {
         double rPop = radiusMeters != null ? radiusMeters : 1000.0;
         double rComp = Rcomp;
 
@@ -50,6 +50,15 @@ public class ParcelRepository {
             String in = "(" + String.join(",", whitelist.stream().map(String::valueOf).toList()) + ")";
             where.add("cs.id IN " + in);
         }
+        if (cityIds != null && !cityIds.isEmpty()) {
+            // Lọc theo bất kỳ thành phố nào được chọn:
+            // tồn tại city thỏa id ∈ (:cityIds) và ST_DWithin(cs, city, city.radius_m)
+            String in = "(" + String.join(",", cityIds.stream().map(String::valueOf).toList()) + ")";
+            where.add("EXISTS (SELECT 1 FROM city ct " +
+                    "        WHERE ct.id IN " + in +
+                    "        AND ST_DWithin(cs.geom::geography, ct.geom::geography, ct.radius_m))");
+        }
+
         if (!where.isEmpty()) sb.append(" WHERE ").append(String.join(" AND ", where));
         sb.append(" ORDER BY cs.id ASC LIMIT ?"); args.add(limit);
 

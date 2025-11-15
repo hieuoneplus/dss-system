@@ -2,35 +2,50 @@
 
 CREATE EXTENSION IF NOT EXISTS postgis;
 CREATE EXTENSION IF NOT EXISTS postgis_raster;
+SELECT postgis_full_version();
 
 DROP TABLE IF EXISTS candidate_site CASCADE;
 DROP TABLE IF EXISTS competitor CASCADE;
 DROP TABLE IF EXISTS population_point CASCADE;
 
 CREATE TABLE candidate_site (
-  id SERIAL PRIMARY KEY,
-  name TEXT NOT NULL,
-  address TEXT,
-  rent_month NUMERIC(14,2) NOT NULL,
-  available_from DATE,
-  geom GEOGRAPHY(POINT,4326) NOT NULL
+                                id SERIAL PRIMARY KEY,
+                                name TEXT NOT NULL,
+                                address TEXT,
+                                rent_month NUMERIC(14,2) NOT NULL,
+                                available_from DATE,
+                                geom GEOGRAPHY(POINT,4326) NOT NULL
 );
 
 CREATE INDEX idx_candidate_geom ON candidate_site USING GIST(geom);
 
 CREATE TABLE competitor (
-  id SERIAL PRIMARY KEY,
-  brand TEXT,
-  geom GEOGRAPHY(POINT,4326) NOT NULL
+                            id SERIAL PRIMARY KEY,
+                            brand TEXT,
+                            geom GEOGRAPHY(POINT,4326) NOT NULL
 );
 CREATE INDEX idx_competitor_geom ON competitor USING GIST(geom);
 
 CREATE TABLE population_point (
-  id SERIAL PRIMARY KEY,
-  pop INTEGER NOT NULL,
-  geom GEOGRAPHY(POINT,4326) NOT NULL
+                                  id SERIAL PRIMARY KEY,
+                                  pop INTEGER NOT NULL,
+                                  geom GEOGRAPHY(POINT,4326) NOT NULL
 );
 CREATE INDEX idx_pop_geom ON population_point USING GIST(geom);
+
+CREATE TABLE city (
+                      id         SERIAL PRIMARY KEY,
+                      name       TEXT NOT NULL,
+                      lat        DOUBLE PRECISION NOT NULL,
+                      lng        DOUBLE PRECISION NOT NULL,
+                      geom       geometry(Point, 4326) GENERATED ALWAYS AS (
+                          ST_SetSRID(ST_MakePoint(lng, lat), 4326)
+                          ) STORED,
+                      radius_m   DOUBLE PRECISION NOT NULL         -- bán kính (m), lấy geom làm tâm
+);
+
+CREATE INDEX city_geom_gist ON city USING GIST (geom);
+
 
 INSERT INTO candidate_site(name,address,rent_month,available_from,geom) VALUES ('Lot 1','So 136 Le Duan, Ha Noi',136416994.27,'2025-12-27',ST_GeogFromText('POINT(105.92437812645832 20.989240347245577)'));
 INSERT INTO candidate_site(name,address,rent_month,available_from,geom) VALUES ('Lot 2','So 26 Hai Ba Trung, Ha Noi',70525705.08,'2025-11-23',ST_GeogFromText('POINT(105.90382137695433 21.05572672411877)'));
@@ -772,3 +787,68 @@ INSERT INTO population_point(pop, geom) VALUES (22586, ST_GeogFromText('POINT(10
 INSERT INTO population_point(pop, geom) VALUES (22787, ST_GeogFromText('POINT(106.00625 21.0925)'));
 INSERT INTO population_point(pop, geom) VALUES (20263, ST_GeogFromText('POINT(106.02374999999999 21.0925)'));
 INSERT INTO population_point(pop, geom) VALUES (21213, ST_GeogFromText('POINT(106.04124999999999 21.0925)'));
+
+INSERT INTO city (name, lat, lng, radius_m) VALUES
+                                                -- 3 đô thị trọng điểm (nếu chưa có)
+                                                ('Hà Nội',             21.0278, 105.8342, 25000),
+                                                ('TP. Hồ Chí Minh',    10.8231, 106.6297, 30000),
+                                                ('Đà Nẵng',            16.0544, 108.2022, 15000),
+
+                                                -- Miền Bắc
+                                                ('Hải Phòng',          20.8449, 106.6881, 18000),
+                                                ('Hạ Long',            20.9711, 107.0448, 15000),
+                                                ('Thái Nguyên',        21.5672, 105.8250, 12000),
+                                                ('Bắc Ninh',           21.1861, 106.0763, 12000),
+                                                ('Hải Dương',          20.9394, 106.3125, 12000),
+                                                ('Nam Định',           20.4203, 106.1680, 12000),
+                                                ('Ninh Bình',          20.2530, 105.9740, 12000),
+                                                ('Vĩnh Yên',           21.3086, 105.6049, 10000),
+                                                ('Việt Trì',           21.3227, 105.4020, 12000),
+                                                ('Bắc Giang',          21.2730, 106.1946, 12000),
+                                                ('Thái Bình',          20.4463, 106.3366, 12000),
+                                                ('Sơn La',             21.3280, 103.9144, 12000),
+                                                ('Lào Cai',            22.4856, 103.9707, 12000),
+                                                ('Lạng Sơn',           21.8564, 106.7610, 12000),
+                                                ('Điện Biên Phủ',      21.3860, 103.0230, 12000),
+                                                ('Hoà Bình',           20.8172, 105.3376, 12000),
+
+                                                -- Bắc Trung Bộ & Trung Trung Bộ
+                                                ('Thanh Hoá',          19.8067, 105.7764, 14000),
+                                                ('Vinh',               18.6796, 105.6813, 14000),
+                                                ('Đồng Hới',           17.4690, 106.6234, 12000),
+                                                ('Đông Hà',            16.8163, 107.1003, 12000),
+                                                ('Huế',                16.4637, 107.5909, 14000),
+                                                ('Hội An',             15.8801, 108.3380, 10000),
+                                                ('Quảng Ngãi',         15.1205, 108.7923, 12000),
+                                                ('Quy Nhơn',           13.7829, 109.2194, 14000),
+                                                ('Tuy Hoà',            13.0957, 109.3209, 12000),
+                                                ('Nha Trang',          12.2388, 109.1967, 15000),
+                                                ('Cam Ranh',           11.9214, 109.1591, 12000),
+                                                ('Phan Rang - Tháp Chàm', 11.5681, 108.9886, 12000),
+                                                ('Đà Lạt',             11.9404, 108.4583, 12000),
+                                                ('Buôn Ma Thuột',      12.6675, 108.0378, 14000),
+                                                ('Pleiku',             13.9716, 108.0147, 12000),
+                                                ('Kon Tum',            14.3545, 108.0076, 12000),
+
+                                                -- Đông Nam Bộ
+                                                ('Biên Hoà',           10.9570, 106.8427, 16000),
+                                                ('Thủ Dầu Một',        10.9804, 106.6519, 14000),
+                                                ('Vũng Tàu',           10.4114, 107.1362, 14000),
+                                                ('Tây Ninh',           11.3100, 106.0983, 12000),
+                                                ('Tân An',             10.5350, 106.4137, 12000),
+
+                                                -- Đồng bằng Sông Cửu Long
+                                                ('Cần Thơ',            10.0452, 105.7469, 16000),
+                                                ('Long Xuyên',         10.3864, 105.4352, 12000),
+                                                ('Rạch Giá',           10.0125, 105.0809, 12000),
+                                                ('Mỹ Tho',             10.3541, 106.3635, 12000),
+                                                ('Bến Tre',            10.2415, 106.3758, 12000),
+                                                ('Vĩnh Long',          10.2537, 105.9722, 12000),
+                                                ('Trà Vinh',            9.9498, 106.3421, 12000),
+                                                ('Sóc Trăng',           9.6039, 105.9739, 12000),
+                                                ('Cà Mau',              9.1768, 105.1524, 14000),
+                                                ('Phú Quốc (Dương Đông)', 10.2899, 103.9840, 20000);
+
+
+
+commit;
