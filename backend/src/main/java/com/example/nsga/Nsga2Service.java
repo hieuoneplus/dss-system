@@ -298,10 +298,18 @@ public class Nsga2Service {
 
     private Ind tournament(List<Ind> pop, int k){
         ThreadLocalRandom r=ThreadLocalRandom.current(); Ind best=null;
-        for (int i=0;i<k;i++){ Ind c=pop.get(r.nextInt(pop.size())); if (best==null||better(c,best)) best=c; }
+        for (int i=0;i<k;i++){
+            Ind c=pop.get(r.nextInt(pop.size()));
+            if (best==null||better(c,best))
+                best=c;
+        }
         return best;
     }
-    private boolean better(Ind a, Ind b){ if (a.rank!=b.rank) return a.rank<b.rank; return Double.compare(a.crowd,b.crowd)>0; }
+    private boolean better(Ind a, Ind b){
+        if (a.rank!=b.rank)
+            return a.rank<b.rank;
+        return Double.compare(a.crowd,b.crowd)>0;
+    }
 
     private List<Ind> topKByIdealDistance(List<Ind> f1, int k){
         if (f1==null||f1.isEmpty()) return List.of();

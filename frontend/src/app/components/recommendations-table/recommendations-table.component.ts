@@ -16,4 +16,9 @@ export class RecommendationsTableComponent {
 
   choose(i: number) { this.pick.emit(i); }
   toPos(x: number) { return (-x); } // chuyển objNegPop về Population (dương)
+
+  getNameParcel(id: number, arr: any): string {
+    let pt = arr.filter(x => x.candidateId == id);
+    return pt[0].name;
+  }
 }

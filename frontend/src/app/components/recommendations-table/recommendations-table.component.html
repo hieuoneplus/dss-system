@@ -26,7 +26,7 @@
       <td>{{ s.rank }}</td>
       <td>
         <div class="chips">
-          <span class="chip" *ngFor="let id of s.candidateIds">{{ id }}</span>
+          <span class="chip" *ngFor="let id of s.candidateIds">{{ getNameParcel(id, s.sites) }}</span>
         </div>
       </td>
     </tr>
