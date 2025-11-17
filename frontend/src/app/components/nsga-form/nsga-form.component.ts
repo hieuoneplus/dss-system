@@ -22,7 +22,7 @@ export class NsgaFormComponent {
     preset: 'balanced',
     maxRent: undefined,
     availableFromIso: undefined,
-    candidateLimit: 500,
+    candidateLimit: 1500,
     cityIds: undefined
   };
 
